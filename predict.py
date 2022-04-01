@@ -8,6 +8,7 @@
 from frnn.frcnn import FRCNN
 from PIL import Image
 
+
 if __name__ == '__main__':
 
     frcc = FRCNN()
