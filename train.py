@@ -17,7 +17,8 @@ from frnn.frcnn_net import FasterRCNN
 from frnn.utils.frcnn_training import weight_init
 from frnn.utils.log_loss import LossHistory
 from frnn.utils.dataloader import FRCNNDataset, frcnn_dataset_collate
-
+from frnn.utils.frcnn_training import FasterRCNNTrainer
+from frnn.utils.utils_fit import fit_one_epoch
 
 
 if __name__ == '__main__':
@@ -110,8 +111,45 @@ if __name__ == '__main__':
 
         train_util = FasterRCNNTrainer(model, optimizer)
 
+        for epoch in range(start_epoch, end_epoch):
+            fit_one_epoch(model, train_util, loss_history, optimizer, epoch,
+                          epoch_step, epoch_step_val, gen, gen_val, end_epoch, Cuda)
+            lr_scheduler.step()
 
+    if True:
+        batch_size = unfreeze_batch_size
+        lr = unfreeze_lr
+        start_epoch = freeze_epoch
+        end_epoch = unfreeze_epoch
 
+        epoch_step = num_train // batch_size
+        epoch_step_val = num_val // batch_size
 
+        if epoch_step == 0 or epoch_step_val == 0:
+            raise ValueError('数据集过小，无法进行训练，请扩充数据')
 
+        optimizer = optim.Adam(model_train.parameters(), lr, weight_decay=5e-4)
+        lr_scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma = 0.96)
 
+        train_dataset   = FRCNNDataset(train_lines, input_shape, train = True)
+        val_dataset     = FRCNNDataset(val_lines, input_shape, train = False)
+        gen             = DataLoader(train_dataset, shuffle = True, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
+                                    drop_last=True, collate_fn=frcnn_dataset_collate)
+        gen_val         = DataLoader(val_dataset  , shuffle = True, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
+                                    drop_last=True, collate_fn=frcnn_dataset_collate)
+
+        #   解除冻结
+        if freeze_train:
+            for param in model.extractor.parameters():
+                param.requires_grad = True
+
+        # ------------------------------------#
+        #   冻结bn层
+        # ------------------------------------#
+        model.freeze_bn()
+
+        train_util = FasterRCNNTrainer(model, optimizer)
+
+        for epoch in range(start_epoch, end_epoch):
+            fit_one_epoch(model, train_util, loss_history, optimizer, epoch, epoch_step, epoch_step_val, gen, gen_val, end_epoch, Cuda)
+            lr_scheduler.step()

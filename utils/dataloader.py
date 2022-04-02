@@ -31,7 +31,7 @@ class FRCNNDataset(Dataset):
         index = index % self.length
         # 训练时进行数据的随机增强，验证时不进行
         image, y = self.get_random_data(self.annotation_lines[index], self.input_shape[:2], random=self.train)
-        image = np.transpose(preprocess_input(np.array(image, dypte=np.float32)), (2,0,1))
+        image = np.transpose(preprocess_input(np.array(image, dtype=np.float32)), (2,0,1))
         box_data = np.zeros((len(y), 5))
         if len(y)>0:
             box_data[:len(y)] = y
@@ -113,7 +113,7 @@ class FRCNNDataset(Dataset):
         x[...,1] *= sat
         x[...,2] *= val
         x[x[:,:,0]>360,0] =360
-        x[:,:,1:][x[:,:,1]>1] = 1
+        x[:,:,1:][x[:,:,1:]>1] = 1
         x[x<0] = 0
         image_data = cv2.cvtColor(x, cv2.COLOR_HSV2RGB) *255
 
@@ -122,7 +122,7 @@ class FRCNNDataset(Dataset):
             np.random.shuffle(box)
             box[:, [0, 2]] = box[:, [0, 2]] * nw / iw + dx
             box[:, [1, 3]] = box[:, [1, 3]] * nh / ih + dy
-            if flip: box[:,[0,2]] = box[:,[2,0]]
+            if flip: box[:,[0,2]] = w - box[:,[2,0]]
             box[:, [0, 1]][box[:, [0, 1]] < 0] = 0
             box[:, 2][box[:, 2] > w] = w
             box[:, 3][box[:, 3] > h] = h
