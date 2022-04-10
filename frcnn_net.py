@@ -11,8 +11,6 @@ from .resnet import resnet50
 from .classifier import Resnet50RoIHead
 
 
-
-
 class FasterRCNN(nn.Module):
 
     def __init__(self, num_classes, mode='training', feat_stride=16, anchor_scales=[8, 16, 32],
@@ -25,7 +23,7 @@ class FasterRCNN(nn.Module):
             # 构建classifier
             self.rpn = RegionProposalsNetwork(in_channels=1024, mid_channels=512,
                                               ratios=ratios, anchor_scales=anchor_scales,
-                                              feat_stride=feat_stride, mode=mode)
+                                              feat_stride=self.feat_stride, mode=mode)
             self.head = Resnet50RoIHead(n_class=num_classes + 1, roi_size=14,
                                         spatial_scale=1, classifier=classifier)
 

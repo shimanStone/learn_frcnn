@@ -22,7 +22,13 @@ def fit_one_epoch(model, train_util, loss_history, optimizer, epoch, epoch_step,
     val_loss = 0
     print('Start Train')
     with tqdm(total=epoch_step, desc=f'Epoch {epoch + 1}/{Epoch}', postfix=dict, mininterval=0.3) as pbar:
+        loss_history.append_log(f'000 === start epoch {epoch + 1} ---------------------------------')
+
         for iteration, batch in enumerate(gen):
+            loss_history.append_log(f' ')
+            loss_history.append_log(f'111 === start epoch {epoch + 1}******epoch_step:{iteration}******')
+            loss_history.append_log(f'\t labels: {batch[2]}')
+
             if iteration >= epoch_step:
                 break
             images, boxes, labels = batch[0], batch[1], batch[2]

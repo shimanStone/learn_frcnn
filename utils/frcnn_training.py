@@ -71,6 +71,13 @@ def bbox2loc(src_bbox, dst_bbox):
 
 
 class AnchorTargetCreator(object):
+    """
+    input: anchor(先验框,shape:(n,4))， bbox(真实框(m,4))
+        ious: anchor与bbox的交并比,shape(n,m)
+        labels: pos\neg样本数，共n_sample个，pos < n_sample*pos_ratio (1正样本，0负样本，-1忽略)
+    output:  每个先验框与真实框的调整参数(编码)loc, label
+    """
+    # 通过真实框和先验框得到每个先验框的的坐标变化情况及
 
     def __init__(self, n_sample=256, pos_iou_thresh=0.7, neg_iou_thresh=0.3, pos_ratio=0.5):
         self.n_sample = n_sample
@@ -79,7 +86,7 @@ class AnchorTargetCreator(object):
         self.pos_ratio = pos_ratio
 
     def __call__(self, bbox, anchor):
-        argmax_ious, label = self._create_label(anchor, bbox)
+        argmax_ious, label = self._create_label(anchor, bbox)  #
         if (label > 0).any():
             loc = bbox2loc(anchor, bbox[argmax_ious])
             return loc, label
@@ -87,8 +94,8 @@ class AnchorTargetCreator(object):
             return np.zeros_like(anchor), label
 
     def _calc_ious(self, anchor, bbox):
-        #
-        ious = bbox_iou(anchor, bbox)
+        # 获取先验框与真实框之间的交并比
+        ious = bbox_iou(anchor, bbox) # shape:(num_anchor,num_bbox)
 
         if len(bbox) == 0:
             return np.zeros(len(anchor), np.int32), np.zeros(len(anchor)), np.zeros(len(bbox))
@@ -137,6 +144,11 @@ class AnchorTargetCreator(object):
 
 
 class ProposalTargetCreator():
+    """
+    为600个rois赋予ground truth (严格来说是128个)
+    input: rois(600个建议框)，一张图上的所有box(R,4), 对应box所对应的label(R,1)
+    output: 128个sample rois, 及对应的gt_roi_loc, gt_roi_label
+    """
     def __init__(self, n_sample=128, pos_ratio=0.5, pos_iou_thresh=0.5,
                  neg_iou_thresh_high=0.5, neg_iou_thresh_low=0):
         self.n_sample = n_sample
@@ -156,9 +168,9 @@ class ProposalTargetCreator():
             max_iou = np.zeros(len(roi))
             gt_roi_label = np.zeros(len(roi))
         else:
-            gt_assignment = iou.argmax(axis=1)
-            max_iou = iou.max(axis=1)
-            gt_roi_label = label[gt_assignment] + 1
+            gt_assignment = iou.argmax(axis=1)  # 建议框对应的真实框index
+            max_iou = iou.max(axis=1)  # 建议框对应的真实框的iou
+            gt_roi_label = label[gt_assignment] + 1  # 真实框标签+1，因为有背景的存在
 
         # 满足建议框和真实框重合程度大于neg_iou_thresh_high的作为正样本
         # 将正样本的数量限制在self.pos_roi_per_image以内
@@ -168,7 +180,7 @@ class ProposalTargetCreator():
             pos_index = np.random.choice(pos_index, size=pos_roi_per_this_image, replace=False)
 
         # 满足建议框和真实框重合度小于neg_hight,大于neg_low的作为负样本
-        neg_index = np.where((max_iou < self.neg_iou_thresh_high)&(max_iou > self.neg_iou_thresh_low))[0]
+        neg_index = np.where((max_iou < self.neg_iou_thresh_high)&(max_iou >= self.neg_iou_thresh_low))[0]
         neg_roi_per_this_image = self.n_sample - pos_roi_per_this_image
         neg_roi_per_this_image = int(min(neg_roi_per_this_image, neg_index.size))
         if neg_index.size > 0:
@@ -192,7 +204,7 @@ class ProposalTargetCreator():
 
 class FasterRCNNTrainer(nn.Module):
 
-    def __init__(self, model, optimizer):
+    def __init__(self, model, optimizer, loss_history):
         super().__init__()
         self.faster_rcnn = model
         self.optimizer = optimizer
@@ -204,6 +216,8 @@ class FasterRCNNTrainer(nn.Module):
         self.proposal_target_creator = ProposalTargetCreator()
 
         self.loc_normalized_std = [0.1,0.1,0.2,0.2]
+
+        self.log_info = loss_history
 
     def _fast_rcnn_loc_loss(self, pred_loc, gt_loc, gt_label, sigma):
         pred_loc = pred_loc[gt_label > 0]
@@ -224,33 +238,48 @@ class FasterRCNNTrainer(nn.Module):
         return regression_loss
 
     def forward(self, imgs, bboxes, labels, scale):
-        # print(bboxes)
         n, img_size = imgs.shape[0], imgs.shape[2:]
         # 公用特征层
         base_feature = self.faster_rcnn.extractor(imgs)
         # 利用rpn获得调整参数、得分、建议框、先验框
         rpn_locs, rpn_scores, rois, roi_indices, anchor = self.faster_rcnn.rpn(base_feature, img_size, scale)
 
+        self.log_info.append_log(f'\t rpn_locs:{rpn_locs.size()}, rpn_scores:{rpn_scores.size()}')
+        self.log_info.append_log(f'\t rois:{rois.size()}, roi_indices:{roi_indices.size()}')
+
         rpn_loc_loss_all, rpn_cls_loss_all,roi_loc_loss_all,roi_cls_loss_all = 0,0,0,0
 
+        temp_n = n
         for i in range(n):
+            self.log_info.append_log(f' ')
+            self.log_info.append_log(f'222 === batch_{i}: {labels[i]}: ########')
+
             bbox = bboxes[i]
             label = labels[i]
             rpn_loc = rpn_locs[i]
             rpn_score = rpn_scores[i]
             roi = rois[roi_indices == i]
             feature = base_feature[i]
+
+            self.log_info.append_log(f'\t bbox:{len(bbox)}, label:{len(label)}')
+            self.log_info.append_log(f'\t rpn_loc:{rpn_loc.size()}, rpn_score:{rpn_score.size()}')
+            self.log_info.append_log(f'\t roi:{roi.size()}, feature:{feature.size()}')
+
             # 利用真实框和先验框获得建设网络应该有的预测结果
             gt_rpn_loc, gt_rpn_label = self.anchor_target_creator(bbox, anchor)
             gt_rpn_loc = torch.Tensor(gt_rpn_loc)
             gt_rpn_label = torch.Tensor(gt_rpn_label).long()
 
+            self.log_info.append_log(f'\t gt_rpn_loc:{gt_rpn_loc.size()}, gt_rpn_label:{gt_rpn_label.size()}')
+
             if rpn_loc.is_cuda:
                 gt_rpn_loc = gt_rpn_loc.cuda()
                 gt_rpn_label = gt_rpn_label.cuda()
             # 分别结算建议框网络的损失函数和分类函数
-            rpn_loc_loss = self._fast_rcnn_loc_loss(rpn_loc,gt_rpn_loc, gt_rpn_label, self.rpn_sigma)
+            rpn_loc_loss = self._fast_rcnn_loc_loss(rpn_loc, gt_rpn_loc, gt_rpn_label, self.rpn_sigma)
             rpn_cls_loss = F.cross_entropy(rpn_score, gt_rpn_label, ignore_index=-1)
+
+            self.log_info.append_log(f'\t rpn_loc_loss:{rpn_loc_loss}, rpn_cls_loss:{rpn_cls_loss}')
 
             # 利用真实框和建议框获得classifier网络应该有的预测结果
             sample_roi, gt_roi_loc, gt_roi_label = self.proposal_target_creator(roi, bbox, label, self.loc_normalized_std)
@@ -258,6 +287,9 @@ class FasterRCNNTrainer(nn.Module):
             gt_roi_loc = torch.Tensor(gt_roi_loc)
             gt_roi_label = torch.Tensor(gt_roi_label).long()
             sample_roi_index = torch.zeros(len(sample_roi))
+
+            self.log_info.append_log(
+                f'\t sample_roi:{sample_roi.size()}, gt_roi_loc:{gt_roi_loc.size()}, gt_roi_label:{gt_roi_label.size()}')
 
             if feature.is_cuda:
                 sample_roi = sample_roi.cuda()
@@ -268,6 +300,8 @@ class FasterRCNNTrainer(nn.Module):
             roi_cls_loc, roi_score = self.faster_rcnn.head(torch.unsqueeze(feature, 0), sample_roi,
                                                            sample_roi_index, img_size)
 
+            self.log_info.append_log(f'\t roi_cls_loc:{roi_cls_loc.size()}, roi_score:{roi_score.size()}')
+
             #   根据建议框的种类，取出对应的回归预测结果
             n_sample = roi_cls_loc.size()[1]
             roi_cls_loc = roi_cls_loc.view(n_sample, -1, 4)
@@ -277,13 +311,18 @@ class FasterRCNNTrainer(nn.Module):
             roi_loc_loss = self._fast_rcnn_loc_loss(roi_loc, gt_roi_loc, gt_roi_label.data, self.roi_sigma)
             roi_cls_loss = nn.CrossEntropyLoss()(roi_score[0], gt_roi_label)
 
+            self.log_info.append_log(f'\t roi_loc_loss:{roi_loc_loss}, roi_cls_loss:{roi_cls_loss}')
+
             rpn_loc_loss_all += rpn_loc_loss
             rpn_cls_loss_all += rpn_cls_loss
             roi_loc_loss_all += roi_loc_loss
             roi_cls_loss_all += roi_cls_loss
 
-        losses = [rpn_loc_loss_all / n, rpn_cls_loss_all / n, roi_loc_loss_all / n, roi_cls_loss_all / n]
+        losses = [rpn_loc_loss_all / temp_n, rpn_cls_loss_all / temp_n, roi_loc_loss_all / temp_n, roi_cls_loss_all / temp_n]
         losses = losses + [sum(losses)]
+
+        self.log_info.append_log(f'losses:{losses}')
+
         return losses
 
     def train_step(self, imgs, bboxes, labels, scale):

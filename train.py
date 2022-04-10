@@ -5,6 +5,20 @@
 # @File    : train.py
 # @describe:
 
+import warnings
+warnings.filterwarnings("ignore")
+
+import os
+import sys
+
+cur_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(cur_dir)
+print(f'cur_dir: {cur_dir}')
+
+sys.path.append(os.path.abspath(cur_dir))
+sys.path.append(os.path.abspath(root_dir))
+print(sys.path)
+
 import torch
 import torch.backends.cudnn as cudnn
 import torch.optim as optim
@@ -25,8 +39,12 @@ if __name__ == '__main__':
 
     Cuda = False
     #
-    classes_path = r'E:\ml_code\data\frcnn\voc_classes.txt'
-    model_path = r'E:\ml_code\data\frcnn\voc_weights_resnet.pth'
+    classes_path = f'{root_dir}/data/frcnn/voc_classes.txt'
+    model_path = f'{root_dir}/data/frcnn/voc_weights_resnet.pth'
+    if (not os.path.exists(classes_path)) or (not os.path.exists(model_path)):
+        print(f'{classes_path} or {model_path}文件路径不存在！！！')
+        exit(-1)
+
     input_shape = [600,600]
     backbone = 'resnet50'
     pretrained = False
@@ -45,7 +63,12 @@ if __name__ == '__main__':
     # 设置多线程读取数据
     num_workers = 0
     # 图片和标签路径
-    train_annotation_path, val_annotation_path = '2007_train.txt', '2007_val.txt'
+    if '/content/gdrive/MyDrive' in cur_dir:
+        train_annotation_path, val_annotation_path = '2007_train_colab.txt', '2007_val_colab.txt'
+    else:
+        train_annotation_path, val_annotation_path = '2007_train.txt', '2007_val.txt'
+
+    print(train_annotation_path, '\n', val_annotation_path)
     # 获取标签名和数
     class_names, num_classes = get_classes(classes_path)
     #
@@ -109,7 +132,7 @@ if __name__ == '__main__':
         # 冻结bn层
         model.freeze_bn()
 
-        train_util = FasterRCNNTrainer(model, optimizer)
+        train_util = FasterRCNNTrainer(model, optimizer, loss_history)
 
         for epoch in range(start_epoch, end_epoch):
             fit_one_epoch(model, train_util, loss_history, optimizer, epoch,
@@ -131,21 +154,19 @@ if __name__ == '__main__':
         optimizer = optim.Adam(model_train.parameters(), lr, weight_decay=5e-4)
         lr_scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma = 0.96)
 
-        train_dataset   = FRCNNDataset(train_lines, input_shape, train = True)
-        val_dataset     = FRCNNDataset(val_lines, input_shape, train = False)
-        gen             = DataLoader(train_dataset, shuffle = True, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
+        train_dataset = FRCNNDataset(train_lines, input_shape, train = True)
+        val_dataset = FRCNNDataset(val_lines, input_shape, train = False)
+
+        gen = DataLoader(train_dataset, shuffle = True, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
                                     drop_last=True, collate_fn=frcnn_dataset_collate)
-        gen_val         = DataLoader(val_dataset  , shuffle = True, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
+        gen_val = DataLoader(val_dataset  , shuffle = True, batch_size = batch_size, num_workers = num_workers, pin_memory=True,
                                     drop_last=True, collate_fn=frcnn_dataset_collate)
 
         #   解除冻结
         if freeze_train:
             for param in model.extractor.parameters():
                 param.requires_grad = True
-
-        # ------------------------------------#
         #   冻结bn层
-        # ------------------------------------#
         model.freeze_bn()
 
         train_util = FasterRCNNTrainer(model, optimizer)

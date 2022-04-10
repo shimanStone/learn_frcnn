@@ -23,6 +23,11 @@ class LossHistory():
 
         os.makedirs(self.save_path)
 
+    def append_log(self, log_info):
+        with open(os.path.join(self.save_path, 'epoch_info_' + str(self.time_str) + '.txt'), 'a') as f:
+            f.write(str(log_info))
+            f.write('\n')
+
     def append_loss(self, loss, val_loss):
         self.losses.append(loss)
         self.val_losses.append(val_loss)

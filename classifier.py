@@ -9,6 +9,9 @@ import torch
 import torch.nn as nn
 from torchvision.ops import RoIPool
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 def normal_init(m, mean, stddev, truncated=False):
     if truncated:
@@ -31,7 +34,7 @@ class Resnet50RoIHead(nn.Module):
         self.score = nn.Linear(2048, n_class)
         # 权重初始化
         normal_init(self.cls_loc, 0, 0.001)
-        normal_init(self.score, 0, 0.001)
+        normal_init(self.score, 0, 0.01)
 
         self.roi = RoIPool((roi_size, roi_size), spatial_scale)
 
@@ -42,8 +45,8 @@ class Resnet50RoIHead(nn.Module):
             rois = rois.cuda()
         # 获取公用特征层上的建议框
         rois_feature_map = torch.zeros_like(rois)  # shanpe(num_rois, 4)
-        rois_feature_map[:, [0, 2]] = rois[:, [0, 2]] / (img_size[1] / x.size()[3])
-        rois_feature_map[:, [1, 3]] = rois[:, [1, 3]] / (img_size[0] / x.size()[2])
+        rois_feature_map[:, [0, 2]] = rois[:, [0, 2]] / img_size[1] * x.size()[3]
+        rois_feature_map[:, [1, 3]] = rois[:, [1, 3]] / img_size[0] * x.size()[2]
         #
         indices_and_rois = torch.cat([rois_indices[:, None], rois_feature_map], dim=1)
         # 利用建议框对公用特征层进行截取
