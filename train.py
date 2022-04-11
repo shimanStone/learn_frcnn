@@ -27,7 +27,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 
 from frnn.utils.utils import get_classes
-from frnn.frcnn_net import FasterRCNN
+from frnn.net.frcnn_net import FasterRCNN
 from frnn.utils.frcnn_training import weight_init
 from frnn.utils.log_loss import LossHistory
 from frnn.utils.dataloader import FRCNNDataset, frcnn_dataset_collate
@@ -40,13 +40,15 @@ if __name__ == '__main__':
     Cuda = False
     #
     classes_path = f'{root_dir}/data/frcnn/voc_classes.txt'
-    model_path = f'{root_dir}/data/frcnn/voc_weights_resnet.pth'
+    # model_path = f'{root_dir}/data/frcnn/voc_weights_resnet.pth'
+    model_path = f'{root_dir}/data/frcnn/voc_weights_vgg.pth'
     if (not os.path.exists(classes_path)) or (not os.path.exists(model_path)):
         print(f'{classes_path} or {model_path}文件路径不存在！！！')
         exit(-1)
 
     input_shape = [600,600]
-    backbone = 'resnet50'
+    # backbone = 'resnet50'
+    backbone = 'vgg16'
     pretrained = False
     anchors_size = [8,16,32]
     # 冻结阶段训练参数 （主干被冻结），占用显存较小，仅对网络进行微调

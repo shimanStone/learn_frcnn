@@ -11,9 +11,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 import colorsys
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageDraw, ImageFont
 
-from .frcnn_net import FasterRCNN
+from frnn.net.frcnn_net import FasterRCNN
 
 from frnn.utils.utils_bbox import DecodeBox
 from frnn.utils.utils import get_classes, get_new_img_size, resize_image, \
@@ -22,8 +22,8 @@ from frnn.utils.utils import get_classes, get_new_img_size, resize_image, \
 
 class FRCNN(object):
     _defaults = {
-        'model_path': './data/voc_weights_resnet.pth',  # 训练模型
-        'classes_path': './data/voc_classes.txt',  # 分类
+        'model_path': '../data/frcnn/voc_weights_resnet.pth',  # 训练模型
+        'classes_path': '../data/frcnn/voc_classes.txt',  # 分类
         'backbone': 'resnet50',  # 主干特征提取网络
         'confidence': 0.5,  # 置信度
         'nms_iou': 0.3,  # 非极大抑制

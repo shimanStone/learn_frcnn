@@ -1,0 +1,188 @@
+000 === start epoch 1 ---------------------------------
+ 
+111 === start epoch 1******epoch_step:0******
+	 labels: [array([2.]), array([6.]), array([14., 14.,  6.]), array([18.])]
+	 rpn_locs:torch.Size([4, 2916, 4]), rpn_scores:torch.Size([4, 2916, 2])
+	 rois:torch.Size([2400, 4]), roi_indices:torch.Size([2400])
+ 
+222 === batch_0: [2.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.4305671453475952, rpn_cls_loss:0.09591638296842575
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.35536107420921326, roi_cls_loss:0.07722065597772598
+ 
+222 === batch_1: [6.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:3.2163078784942627, rpn_cls_loss:0.053120747208595276
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.3934222459793091, roi_cls_loss:0.031838104128837585
+ 
+222 === batch_2: [14. 14.  6.]: ########
+	 bbox:3, label:3
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.7066155076026917, rpn_cls_loss:0.12806642055511475
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.9342532157897949, roi_cls_loss:0.12440613657236099
+ 
+222 === batch_3: [18.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.11328011751174927, rpn_cls_loss:0.14499902725219727
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.1814885139465332, roi_cls_loss:0.009034446440637112
+losses:[tensor(1.1167, grad_fn=<DivBackward0>), tensor(0.1055, grad_fn=<DivBackward0>), tensor(0.4661, grad_fn=<DivBackward0>), tensor(0.0606, grad_fn=<DivBackward0>), tensor(1.7490, grad_fn=<AddBackward0>)]
+ 
+111 === start epoch 1******epoch_step:1******
+	 labels: [array([14., 12.]), array([14.,  4., 14.]), array([14., 14., 14., 14., 12., 14., 12., 14., 14., 12., 12., 14.]), array([13., 13.,  6., 13., 14., 14., 14.,  6.])]
+	 rpn_locs:torch.Size([4, 2916, 4]), rpn_scores:torch.Size([4, 2916, 2])
+	 rois:torch.Size([2400, 4]), roi_indices:torch.Size([2400])
+ 
+222 === batch_0: [14. 12.]: ########
+	 bbox:2, label:2
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.5664060115814209, rpn_cls_loss:0.08793914318084717
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.5429993867874146, roi_cls_loss:0.02966039441525936
+ 
+222 === batch_1: [14.  4. 14.]: ########
+	 bbox:3, label:3
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.6624058485031128, rpn_cls_loss:0.18983997404575348
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.8110136985778809, roi_cls_loss:0.08467550575733185
+ 
+222 === batch_2: [14. 14. 14. 14. 12. 14. 12. 14. 14. 12. 12. 14.]: ########
+	 bbox:12, label:12
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.7532179355621338, rpn_cls_loss:0.5447602272033691
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.7550984025001526, roi_cls_loss:0.2382897138595581
+ 
+222 === batch_3: [13. 13.  6. 13. 14. 14. 14.  6.]: ########
+	 bbox:8, label:8
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.8136107325553894, rpn_cls_loss:0.35919028520584106
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.4731215536594391, roi_cls_loss:0.15361882746219635
+losses:[tensor(0.6989, grad_fn=<DivBackward0>), tensor(0.2954, grad_fn=<DivBackward0>), tensor(0.6456, grad_fn=<DivBackward0>), tensor(0.1266, grad_fn=<DivBackward0>), tensor(1.7665, grad_fn=<AddBackward0>)]
+ 
+111 === start epoch 1******epoch_step:2******
+	 labels: [array([6., 6.]), array([6.]), array([18., 18.]), array([7.])]
+	 rpn_locs:torch.Size([4, 2916, 4]), rpn_scores:torch.Size([4, 2916, 2])
+	 rois:torch.Size([2400, 4]), roi_indices:torch.Size([2400])
+ 
+222 === batch_0: [6. 6.]: ########
+	 bbox:2, label:2
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:2.2784643173217773, rpn_cls_loss:0.07709634304046631
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.48194432258605957, roi_cls_loss:0.030947301536798477
+ 
+222 === batch_1: [6.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.10329870879650116, rpn_cls_loss:0.023708341643214226
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.42392727732658386, roi_cls_loss:0.027706457301974297
+ 
+222 === batch_2: [18. 18.]: ########
+	 bbox:2, label:2
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.16831406950950623, rpn_cls_loss:0.09907633811235428
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.628957211971283, roi_cls_loss:0.031566180288791656
+ 
+222 === batch_3: [7.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:1.23692786693573, rpn_cls_loss:0.0375496931374073
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.19835726916790009, roi_cls_loss:0.00039228121750056744
+losses:[tensor(0.9468, grad_fn=<DivBackward0>), tensor(0.0594, grad_fn=<DivBackward0>), tensor(0.4333, grad_fn=<DivBackward0>), tensor(0.0227, grad_fn=<DivBackward0>), tensor(1.4621, grad_fn=<AddBackward0>)]
+ 
+111 === start epoch 1******epoch_step:3******
+	 labels: [array([5., 5., 5., 5.]), array([8.]), array([14.]), array([19., 17.])]
+	 rpn_locs:torch.Size([4, 2916, 4]), rpn_scores:torch.Size([4, 2916, 2])
+	 rois:torch.Size([2400, 4]), roi_indices:torch.Size([2400])
+ 
+222 === batch_0: [5. 5. 5. 5.]: ########
+	 bbox:4, label:4
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.8409299850463867, rpn_cls_loss:0.17588533461093903
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.7393504977226257, roi_cls_loss:0.01163201779127121
+ 
+222 === batch_1: [8.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.19538700580596924, rpn_cls_loss:0.2827259302139282
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:1.1626710891723633, roi_cls_loss:0.07754959166049957
+ 
+222 === batch_2: [14.]: ########
+	 bbox:1, label:1
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:1.098555088043213, rpn_cls_loss:0.03129119426012039
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:1.6180782318115234, roi_cls_loss:0.019935481250286102
+ 
+222 === batch_3: [19. 17.]: ########
+	 bbox:2, label:2
+	 rpn_loc:torch.Size([2916, 4]), rpn_score:torch.Size([2916, 2])
+	 roi:torch.Size([600, 4]), feature:torch.Size([512, 18, 18])
+	 gt_rpn_loc:torch.Size([2916, 4]), gt_rpn_label:torch.Size([2916])
+	 rpn_loc_loss:0.9696012735366821, rpn_cls_loss:0.06662776321172714
+	 sample_roi:torch.Size([128, 4]), gt_roi_loc:torch.Size([128, 4]), gt_roi_label:torch.Size([128])
+	 roi_cls_loc:torch.Size([1, 128, 84]), roi_score:torch.Size([1, 128, 21])
+	 roi_loc_loss:0.31392955780029297, roi_cls_loss:0.03102712705731392
+losses:[tensor(0.7761, grad_fn=<DivBackward0>), tensor(0.1391, grad_fn=<DivBackward0>), tensor(0.9585, grad_fn=<DivBackward0>), tensor(0.0350, grad_fn=<DivBackward0>), tensor(1.9088, grad_fn=<AddBackward0>)]
+ 
+111 === start epoch 1******epoch_step:4******
+	 labels: [array([14., 14.]), array([ 6., 14., 14., 13., 13., 14., 13., 14., 13., 13., 13.]), array([11.]), array([ 6., 14., 13.,  5.])]

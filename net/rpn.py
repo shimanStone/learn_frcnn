@@ -11,7 +11,7 @@ import numpy as np
 import torch
 from torchvision.ops import nms
 
-from .utils.utils_bbox import loc2bbox
+from frnn.utils.utils_bbox import loc2bbox
 
 
 

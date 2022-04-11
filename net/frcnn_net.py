@@ -8,13 +8,14 @@
 import torch.nn as nn
 from .rpn import RegionProposalsNetwork
 from .resnet import resnet50
-from .classifier import Resnet50RoIHead
+from .classifier import Resnet50RoIHead, VGG16RoIHead
+from .vgg16 import decom_vgg16
 
 
 class FasterRCNN(nn.Module):
 
     def __init__(self, num_classes, mode='training', feat_stride=16, anchor_scales=[8, 16, 32],
-                 ratios=[0.5, 1, 2], backbone='resnet50', pretrained=False):
+                 ratios=[0.5, 1, 2], backbone='vgg16', pretrained=False):
         super().__init__()
 
         self.feat_stride = feat_stride
@@ -26,6 +27,14 @@ class FasterRCNN(nn.Module):
                                               feat_stride=self.feat_stride, mode=mode)
             self.head = Resnet50RoIHead(n_class=num_classes + 1, roi_size=14,
                                         spatial_scale=1, classifier=classifier)
+        if backbone == 'vgg16':
+            self.extractor, classifier = decom_vgg16(pretrained)
+            self.rpn = RegionProposalsNetwork(in_channels=512, mid_channels=512,
+                                              ratios=ratios, anchor_scales=anchor_scales,
+                                              feat_stride = self.feat_stride, mode=mode)
+            self.head = VGG16RoIHead(n_class=num_classes+1, roi_size=7,
+                                     spatial_scale=1, classifier=classifier)
+
 
     def forward(self, x, scale=1.):
         # 输入图片的大小
