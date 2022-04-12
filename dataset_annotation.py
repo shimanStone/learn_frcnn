@@ -9,7 +9,7 @@ import os
 import random
 import xml.etree.ElementTree as ET
 
-from frnn.utils.utils import get_classes
+from fastercnn.utils.utils import get_classes
 
 
 # 准备工作收集待训练的数据集，利用labelimg制作Annotations

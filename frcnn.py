@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2022/3/31 13:42
 # @Author  : shiman
-# @File    : frcnn.py
+# @File    : fastercnn.py
 # @describe: faster-rcnn 模型
 
 
@@ -13,10 +13,10 @@ import torch.nn as nn
 import colorsys
 from PIL import ImageDraw, ImageFont
 
-from frnn.net.frcnn_net import FasterRCNN
+from fastercnn.net.frcnn_net import FasterRCNN
 
-from frnn.utils.utils_bbox import DecodeBox
-from frnn.utils.utils import get_classes, get_new_img_size, resize_image, \
+from fastercnn.utils.utils_bbox import DecodeBox
+from fastercnn.utils.utils import get_classes, get_new_img_size, resize_image, \
                                 cvtColor, preprocess_input
 
 
@@ -37,6 +37,13 @@ class FRCNN(object):
             return cls._defaults[n]
         else:
             return f'Unrecognized attribute name {n}'
+
+    @classmethod
+    def set_defaults(cls, k, v):
+        if k in cls._defaults:
+            cls._defaults[k] = v
+        else:
+            return f'Unrecognized attribute name {k}'
 
     def __init__(self, **kwargs):
 
@@ -64,7 +71,7 @@ class FRCNN(object):
         device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
         self.net.load_state_dict(torch.load(self.model_path, map_location=device))
         self.net = self.net.eval()
-        print(f'{self.model_path} model, anchors, and classes loaded')
+        print(f'{self.model_path} model, backbone: {self.backbone}, anchors, and classes loaded')
 
         if self.cuda:
             self.net = nn.DataParallel(self.net)

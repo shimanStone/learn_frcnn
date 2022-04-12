@@ -11,8 +11,8 @@ from PIL import Image
 
 from torch.utils.data.dataset import Dataset
 
-from frnn.utils.utils import cvtColor
-from frnn.utils.utils import preprocess_input
+from fastercnn.utils.utils import cvtColor
+from fastercnn.utils.utils import preprocess_input
 
 
 class FRCNNDataset_(Dataset):

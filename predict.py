@@ -5,14 +5,17 @@
 # @File    : predict.py
 # @describe
 
-from frnn.frcnn import FRCNN
+import os
+from fastercnn.frcnn import FRCNN
 from PIL import Image
 
 
 if __name__ == '__main__':
 
-    FRCNN._defaults['model_path'] = r'E:\ml_code\data\frcnn\voc_weights_vgg.pth'
-    FRCNN._defaults['backbone'] = r'vgg16'
+    # FRCNN._defaults['model_path'] = r'E:\ml_code\data\frcnn\voc_weights_vgg.pth'
+    # FRCNN._defaults['backbone'] = r'vgg16'
+    FRCNN.set_defaults('model_path', r'E:\ml_code\data\frcnn\voc_weights_vgg.pth')
+    FRCNN.set_defaults('backbone', 'vgg16')
     frcc = FRCNN()
     mode='predict'
     dir_origin_path, dir_save_path = '',''

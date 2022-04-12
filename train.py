@@ -26,13 +26,13 @@ from torch.utils.data import DataLoader
 
 import numpy as np
 
-from frnn.utils.utils import get_classes
-from frnn.net.frcnn_net import FasterRCNN
-from frnn.utils.frcnn_training import weight_init
-from frnn.utils.log_loss import LossHistory
-from frnn.utils.dataloader import FRCNNDataset, frcnn_dataset_collate
-from frnn.utils.frcnn_training import FasterRCNNTrainer
-from frnn.utils.utils_fit import fit_one_epoch
+from fastercnn.utils.utils import get_classes
+from fastercnn.net.frcnn_net import FasterRCNN
+from fastercnn.utils.frcnn_training import weight_init
+from fastercnn.utils.log_loss import LossHistory
+from fastercnn.utils.dataloader import FRCNNDataset, frcnn_dataset_collate
+from fastercnn.utils.frcnn_training import FasterRCNNTrainer
+from fastercnn.utils.utils_fit import fit_one_epoch
 
 
 if __name__ == '__main__':
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     Cuda = False
     #
     classes_path = f'{root_dir}/data/frcnn/voc_classes.txt'
-    # model_path = f'{root_dir}/data/frcnn/voc_weights_resnet.pth'
+    # model_path = f'{root_dir}/data/fastercnn/voc_weights_resnet.pth'
     model_path = f'{root_dir}/data/frcnn/voc_weights_vgg.pth'
     if (not os.path.exists(classes_path)) or (not os.path.exists(model_path)):
         print(f'{classes_path} or {model_path}文件路径不存在！！！')
